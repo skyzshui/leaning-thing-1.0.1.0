@@ -890,3 +890,120 @@ Hello, Jesse!
 `好吧来玩笑的`
 ## 传递实参
 ### 位置实参 
+调用函数时，Python必须将函数调用中的每个实参都关联到函数定义中的一个形
+参。为此，最简单的关联方式是基于实参的顺序。这种关联方式称为位置实参 。
+为明白其中的工作原理，来看一个显示宠物信息的函数。这个函数指出一个宠物属
+于哪种动物以及它叫什么名字，如下所示：
+```python
+def describle_pet(animal_pet,pet_name):#这个函数的定义表明，它需要一种动物类型和名字
+    """显示宠物的信息"""
+    print(f"\nI have a {animal_type}.")
+    print(f"\nMy {animal_type}'s is {pet_name.title()}")
+describle_pet('hamster','harry')#调用函数中，实参’hamster‘,被赋给形参animal_type，而形参’harry‘被赋给形参pet_name
+```
+```python
+I have a hamster.
+My hamster's name is Harry.
+```
+#### 多次调用函数
+可以根据需要调用函数任意次。要再描述一个宠物，只需要再次调用describe_pet()即可：
+```python
+def describe_pet(animal_type,pet_name):
+    """显示宠物信息"""
+    print(f"\nI have a {animal_type}.")
+    print(f"\nMy {animal_type}'s name is {pet_name.title()}.")
+describe_pet('hamster','harry')
+describe_pet('dog','willie')
+```
+第二次调用describe_pet() 函数时，向它传递了实参'dog' 和'willie'
+。与第一次调用时一样，Python将实参'dog' 关联到形参animal_type ，并
+将实参'willie' 关联到形参pet_name 。与前面一样，这个函数完成了任
+务，但打印的是一条名为Willie的小狗的信息。至此，有一只名为Harry的仓
+鼠，还有一条名为Willie的小狗：
+```python
+I have a hamster.
+My hamster's name is Harry.
+I have a dog.
+My dog's name is Willie.
+```
+多次调用函数是一种效率极高的工作方式，只需要在函数中编写一次宠物信息的代码
+然后每当需要需要描述新宠物时，都调用该函数并向它提供新宠物的信息。
+即便描述宠物的代码增加到了10行，依然只需使用一行调用函数的代码，就可
+描述一个新宠物。
+### b.位置实参的顺序很重要
+使用位置实参来调用函数时，如果实参的顺序不对，结果可能出乎意料：
+```python
+def describe_pet(animal_type, pet_name):
+ """显示宠物的信息。"""
+ print(f"\nI have a {animal_type}.")
+ print(f"My {animal_type}'s name is {pet_name.title()}.")
+describe_pet('harry', 'hamster')
+```
+在这个函数调用中，先指定名字，再指定动物类型。由于实参'harry' 在前，
+这个值将赋给形参animal_type 。同理，'hamster' 将赋给形参pet_name
+。结果是有一个名为Hamster的harry：
+```python
+I have a harry.
+My harry's name is Hamster.
+```
+如果你得到的结果像上面一样可笑，请确认函数调用中实参的顺序与函数定义
+中形参的顺序一致
+## 关键字实参
+关键字实参 是传递给函数的名称值对。因为直接在实参中将名称和值关联起来，所
+以向函数传递实参时不会混淆（不会得到名为Hamster的harry这样的结果）。关键
+字实参让你无须考虑函数调用中的实参顺序，还清楚地指出了函数调用中各个值的
+用途。
+下面来重新编写pets.py，在其中使用关键字实参来调用describe_pet()：
+```python
+def describe_pet(animal_type, pet_name):
+ """显示宠物的信息。"""
+ print(f"\nI have a {animal_type}.")
+ print(f"My {animal_type}'s name is {pet_name.title()}.")
+describe_pet(animal_type='hamster', pet_name='harry')
+```
+函数describe_pet() 还和之前一样，但调用这个函数时，向Python明确地指出
+了各个实参对应的形参。看到这个函数调用时，Python知道应该将实参'hamster'
+和'harry' 分别赋给形参animal_type 和pet_name 。输出正确无误，指出有
+一只名为Harry的仓鼠。
+关键字实参的顺序无关紧要，因为Python知道各个值该赋给哪个形参。下面两个函
+数调用是等效的:
+```python
+describe_pet(animal_type='hamster', pet_name='harry')
+describe_pet(pet_name='harry', animal_type='hamster')
+```
+注意 　使用关键字实参时，务必准确指定函数定义中的形参名。
+## 默认值
+编写函数时，可以给每个形参来指定默认值。在调用用函数中给形参提供实参时，
+python将使用指定的实参值：否则，将使用形参的默认值。因此，给形参指定默认值。
+因此，给形象按指定默认值后，可以在函数调用中省略相应的实参。使用默认可简化函数的调用，
+还可以清楚的指出函数的典型用法。
+例如，如果你发现调用describe_pet()时，描述的大多数是小狗，就可以将形参aniaml_type的默认值设置为"dog".这样，调用describe_pet()来描述小狗是，就不用提供这样的信息：
+```python
+def descirbe_pet(pet_name,animal_type='dog'):
+    print(f"\nI have a {animal_type}.")
+    print(f"\nMy {animal_type}'s name is {type_name.title()}")
+describe_pet(pet_name='willie')
+```
+这里修改了函数describe_pet()的定义，在其中给的形参animal_type指定了默认值’dog‘。这样调用这个函数是，如果没有给animal_type指定值，python就会将把这个形参设置为'dog':
+```python
+I have a dog.
+My dog’s name is willie.
+```
+## 等效的函数调用
+鉴于可混合使用位置实参、关键字实参和默认值，通常有多种等效的函数调用方式
+。请看下面对函数describe_pet() 的定义，其中给一个形参提供了默认值：
+```python
+def describe_pet(pet_name,animal_type='dog'):
+```
+基于这种定义，在任何情况下都必须给pet_name 提供实参。指定该实参时可采用
+位置方式，也可采用关键字方式。如果要描述的动物不是小狗，还必须在函数调用
+中给animal_type 提供实参。同样，指定该实参时可以采用位置方式，也可采用
+关键字方式。
+下面对这个函数的所有调用都可行：
+```python
+# 一条名为wille的小狗
+descirbe_pet('wille')
+descirbe_pet(pet_name='wille')
+# 一只名为Harry的仓鼠。
+describe_pet('Harry','hamster')
+```
