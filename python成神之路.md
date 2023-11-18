@@ -1007,3 +1007,428 @@ descirbe_pet(pet_name='wille')
 # 一只名为Harry的仓鼠。
 describe_pet('Harry','hamster')
 ```
+### 避免实参错误
+等你开始使用函数后，如果遇到实参不匹配错误，不要大惊小怪。你提供的实参多于或少于函数的完成工作所需要的时间时，将会出现实参不匹配错误。列如，如果调用数describe_pet()时没有指定任何实参，结果将如何呢？
+```python
+def describe_pet(animal_type,pet_name):
+    print(f"\nI have a {animal_type}.")
+    print(f"\nMy {animal_type}'s name is {pet_name}")
+describe_pet()
+```
+Python发现该函数调用缺少必要的信息
+traceback指出该函数调用
+少了两个实参，并指出了相应形参的名称。如果这个函数存储在一个独立的文件
+中，我们也许无须打开这个文件并查看函数的代码，就能重新正确地编写函数调
+用。
+## 返回值
+函数并非总是直接显示输出，它还可以处理一些数据，并返回一个或一组值。函数
+返回的值称为返回值 。在函数中，可使用return 语句将值返回到调用函数的代码
+行。返回值让你能够将程序的大部分繁重工作移到函数中去完成，从而简化主程
+序。
+### 简单的返回值
+`formatted_name.py`
+```python
+def get_formatted_name(first_name,last_name):#定义函数通过形参获取姓和名
+    full_name = f"{first_name} {last_name}"#他将姓和名合二为一，在中间加上空格，并将结果赋给变量full_name
+    return full_name.title()#将首字母大写，并将结果返还给函数调用行
+musician = get_formatted_name('jim','hen')
+print(musician)
+```
+运行结果
+```python
+Jim Hen
+```
+原本只需编写下面的代码就可输出整洁的姓名，相比于此，前面做的工作好像太多
+了：
+```python
+print("Jim Hen")
+```
+但在需要分别存储大量名和姓的大型程序中，像get_formatted_name() 这样的
+函数非常有用。可以分别存储名和姓，每当需要显示姓名时都调用这个函数。
+### 让实参变成可选的
+有时候，需要让实参变成可选的，这样使用函数的人就能只在必要时提供额外的信
+息。可使用默认值来让实参变成可选的。
+例如，假设要扩展函数get_formatted_name() ，使其同时处理中间名。为此，
+可将其修改成类似于下面这样：
+```python
+def get_formatted_name(first_name, middle_name, last_name):
+ """返回整洁的姓名。"""
+ full_name = f"{first_name} {middle_name} {last_name}"
+ return full_name.title()
+musician = get_formatted_name('john', 'lee', 'hooker')
+print(musician)
+```
+只要同时提供名、中间名和姓，这个函数就能正确运行。它根据这三部分创建一个
+字符串，在适当的地方加上空格，并将结果转换为首字母大写格式：
+```python
+John Lee Hooker
+```
+并非所有的人都有中间名，但如果调用这个函数时只提供了名和姓，它将不能正确
+运行。为了让中间名变成可选的，可给形参middle_name 指定一个空的默认值，
+并在用户没有提供中间名时不使用这个形参。为让get_formatted_name() 在没
+有提供中间名时依然可行，可将形参middle_name 的默认值设置为空字符串，并
+将其移到形参列表的末尾：
+```python
+❶def get_formatted_name(first_name, last_name, middle_name=''):
+❷    if middle_name:
+         full_name = f"{first_name} {middle_name} {last_name}"
+❸    else:
+         full_name = f"{first_name} {last_name}"
+    return full_name.title()
+❹somebody = get_formatted_name('jim','hook','lee')
+somebody_1 = get_formatted_name('jim','lee')
+print(somebody)
+print(somebody_1)
+```
+```python
+Jim Lee Hook
+Jim Lee
+```
+在本例中，姓名是根据三个可能提供的部分创建的。由于人都有名和姓，因此在函
+数定义中首先列出了这两个形参。中间名是可选的，因此在函数定义中最后列出该
+形参，并将其默认值设置为空字符串（见❶）。
+在函数体中，检查是否提供了中间名。Python将非空字符串解读为True ，因此如
+果函数调用中提供了中间名，if middle_name 将为True （见❷）。如果提供了
+中间名，就将名、中间名和姓合并为姓名，再将其修改为首字母大写格式，并返回
+到函数调用行。在函数调用行，将返回的值赋给变量musician ，然后这个变量的
+值被打印出来。如果没有提供中间名，middle_name 将为空字符串，导致if 测试
+未通过，进而执行else 代码块（见❸）：只使用名和姓来生成姓名，并将格式设置
+好的姓名返回给函数调用行。在函数调用行，将返回的值赋给变量musician ，然
+后这个变量的值被打印出来。
+### 返回字典
+函数可以返回任何类型的值，包括字典和列表的复杂数据结构。例如，下面的函数接受姓名的组成部分，并返回一个表示人的字典：
+`peson.py`
+```python
+def build_person(first_name,last_name):
+    person = {'first':first_name,'last':last_name}
+    return person
+somebody = build_person('jim','hen')
+print(somebody)
+```
+这个函数接受简单的文本信息，并将其放在一个更合适的数据结构中，让你不仅能
+打印这些信息，还能以其他方式处理它们。当前，字符串'jim' 和'hen'
+被标记为名和姓。你可以轻松地扩展这个函数，使其接受可选值，如中间名、年
+龄、职业或其他任何要存储的信息。例如，下面的修改让你能存储年龄：
+```python
+def buid_person(first_name,lats_name,age=none):
+    if age:
+        person['age'] = age
+    return person
+musican = build_person('jim','hen',age=27)
+print(musician)
+```
+在函数定义中，新增了一个可选形参age ，并将其默认值设置为特殊值None （表
+示变量没有值）。可将None 视为占位值。在条件测试中，None 相当于False 。
+如果函数调用中包含形参age 的值，这个值将被存储到字典中。在任何情况下，这
+个函数都会存储人的姓名，但可进行修改，使其同时存储有关人的其他信息。
+### 结合使用函数和while循环
+可将函数同本书前面介绍的任何Python结构结合起来使用。例如，下面将结合使用
+函数get_formatted_name() 和while 循环，以更正式的方式问候用户。下面
+尝试使用名和姓跟用户打招呼：
+`greeter.py`
+```python
+def get_formatted_name(first_name, last_name):
+ """返回整洁的姓名。"""
+ full_name = f"{first_name} {last_name}"
+ return full_name.title()
+ # 这是一个无限循环！
+ while True:
+    print("\nPlease tell me your name:")
+    f_name = input("First name: ")
+    l_name = input("Last name: ")
+    formatted_name = get_formatted_name(f_name, l_name)
+    print(f"\nHello, {formatted_name}!")
+```
+在本例中，使用的是get_formatted_name() 的简单版本，不涉及中间名。
+while 循环让用户输入姓名：依次提示用户输入名和姓（见❶）。
+但这个while 循环存在一个问题：没有定义退出条件。请用户提供一系列输入时，
+该在什么地方提供退出途径呢？要让用户能够尽可能容易地退出，因此每次提示用
+户输入时，都应提供退出途径。每次提示用户输入时，都使用break 语句提供退出
+循环的简单途径：
+```python
+def get_formatted_name(first_name, last_name):
+ """返回整洁的姓名。"""
+ full_name = f"{first_name} {last_name}"
+ return full_name.title()
+while True:
+    print("\nPlease tell me your name:")
+    print("(enter 'q' at any time to quit)")
+    f_name = input("First name: ")
+    if f_name == 'q':
+        break
+    l_name = input("Last name: ")
+    if l_name == 'q':
+        break
+    formatted_name = get_formatted_name(f_name, l_name)
+    print(f"\nHello, {formatted_name}!")
+```
+```python
+Please tell me your name:
+(enter 'q' at any time to quit)
+First name: jim
+Last name: hem
+
+Hello, Jim Hem!
+
+Please tell me your name:
+(enter 'q' at any time to quit)
+First name: q
+```
+
+## 传递函数
+你经常会发现，向函数传递列表很有用，其中包含的可能是名字、数或更复杂的对
+象（如字典）。将列表传递给函数后，函数就能直接访问其内容。下面使用函数来
+提高处理列表的效率。
+假设有一个用户列表，我们要问候其中的每位用户。下面的示例将包含名字的列表
+传递给一个名为greet_users() 的函数，这个函数问候列表中的每个人：
+`greet_user.py`
+```python
+ def greet_users(names):
+ """向列表中的每位用户发出简单的问候。"""
+         for name in names:
+         msg = f"Hello, {name.title()}!"
+         print(msg)
+
+usernames = ['hannah', 'ty', 'margot']
+ greet_users(usernames)
+```
+### 在函数中修改列表
+将列表传递给函数后，函数就可对其进行修改。在函数中对这个列表所做的任何修
+改都是永久性的，这让你能够高效地处理大量数据。
+来看一家为用户提交的设计制作3D打印模型的公司。需要打印的设计存储在一个列
+表中，打印后将移到另一个列表中。下面是在不使用函数的情况下模拟这个过程的
+代码:
+```python
+#首先创建一个列表，其中包含一些要打印的设计
+unprinted_designs = ['phone case','robot pandant','dodeschaedron']
+completed_models = []
+# 模拟打印每个设计，直到没有未打印的设计为止。
+# 打印每个设计后，都将其移到列表completed_models中。
+while unprinted_designs:
+     current_design = unprinted_designs.pop()
+     print(f"Printing model: {current_design}")
+     completed_models.append(current_design)
+# 显示打印好的所有模型。
+print("\nThe following models have been printed:")
+for completed_model in completed_models:
+ print(completed_model)
+```
+这个程序首先创建一个需要打印的设计列表，以及一个名为completed_models
+的空列表，每个设计打印后都将移到其中。只要列表unprinted_designs 中还有
+设计，while 循环就模拟打印设计的过程：从该列表末尾删除一个设计，将其赋给
+变量current_design ，并显示一条消息指出正在打印当前的设计，然后将该设
+计加入到列表completed_models 中。循环结束后，显示已打印的所有设计：
+```python
+Printing model: dodeschaedron
+Printing model: robot pandant
+Printing model: phone case
+
+The following models have been printed:
+dodeschaedron
+robot pandant
+phone case
+```
+为重新组织这些代码，可编写两个函数，每个都做一件具体的工作。大部分代码与
+原来相同，只是效率更高。第一个函数负责处理打印设计的工作，第二个概述打印
+了哪些设计：
+```python
+def print_models(unprinted_designs,completed_models):#处定义了函数print_models() ，它包含两个形参：一个需要打印的设计列表和一个打印好的模型列表。给定这两个列表，该函数模拟打印每个设计的过程：将设
+计逐个从未打印的设计列表中取出，并加入打印好的模型列表中。
+    while unprinted_designs:
+        current_design = unprint_designs.pop()
+        print(f"printing model:{current_design}")
+        completed_modles.append(current_design)
+
+ def show_completed_models(completed_models):#处定义了函数show_completed_models() ，它包含一个形参：打印好的模型列表。给定这个列表，函数show_completed_models() 显示打印出来的每个模型的名称。
+ """显示打印好的所有模型。"""
+    print("\nThe following models have been printed:")
+    for completed_model in completed_models:
+        print(completed_model)
+unprinted_designs = ['phone case', 'robot pendant', 'dodecahedron']
+ completed_models = []
+ print_models(unprinted_designs, completed_models)
+ show_completed_models(completed_models)
+```
+我们创建了一个未打印的设计列表，还创建了一个空列表，用于存储打印好的模
+型。接下来，由于已经定义了两个函数，只需调用它们并传入正确的实参即可。我
+们调用print_models() 并向它传递两个列表。像预期一样，print_models()
+模拟打印设计的过程。接下来，调用show_completed_models() ，并将打印好
+的模型列表传递给它，让其能够指出打印了哪些模型。描述性的函数名让别人阅读
+这些代码时也能明白，尽管没有任何注释。
+相比于没有使用函数的版本，这个程序更容易扩展和维护。如果以后需要打印其他
+设计，只需再次调用print_models() 即可。如果发现需要对打印代码进行修
+改，只需修改这些代码一次，就能影响所有调用该函数的地方。与必须分别修改程
+序的多个地方相比，这种修改的效率更高。
+该程序还演示了这样一种理念：每个函数都应只负责一项具体的工作。第一个函数
+打印每个设计，第二个显示打印好的模型。这优于使用一个函数来完成这两项工
+作。编写函数时，如果发现它执行的任务太多，请尝试将这些代码划分到两个函数
+中。别忘了，总是可以在一个函数中调用另一个函数，这有助于将复杂的任务划分
+成一系列步骤。
+## 禁止在函数中修改列表
+有时候，需要禁止函数修改列表。例如，假设像前一个示例那样，你有一个未打印
+的设计列表，并编写了一个函数将这些设计移到打印好的模型列表中。你可能会做
+出这样的决定：即便打印好了所有设计，也要保留原来的未打印的设计列表，以供
+备案。但由于你将所有的设计都移出了unprinted_designs ，这个列表变成了空
+的，原来的列表没有了。为解决这个问题，可向函数传递列表的副本而非原件。这
+样，函数所做的任何修改都只影响副本，而原件丝毫不受影响。
+要将列表的副本传递给函数，可以像下面这样做：
+`function_name(list_name[:])`切片表示法`[:]`创建表示的副本
+在`printing_models.py`中
+```python
+print_models(unprinted_designs[:],completed_models)
+```
+这样函数print_models() 依然能够完成工作，因为它获得了所有未打印的设计
+的名称，但使用的是列表unprinted_designs 的副本，而不是列表
+unprinted_designs 本身。像以前一样，列表completed_models 也将包含打
+印好的模型的名称，但函数所做的修改不会影响到列表unprinted_designs 。
+虽然向函数传递列表的副本可保留原始列表的内容，但除非有充分的理由，否则还
+是应该将原始列表传递给函数。这是因为让函数使用现成的列表可避免花时间和内
+存创建副本，从而提高效率，在处理大型列表时尤其如此。
+## 传递任意数量的实参
+python中允许函数从调用语句中收集任意数量的实参。
+例如，来看一个制作披萨的函数，它需要接受很多配料，但无法预先确定顾客要多少种
+配料，下面的函数中只有一个形参`*toppongs`，但是不管调用语句提供多少实参，这个
+形参将他们统统收入囊种：
+```python
+def make_pizza(*toppings):
+    print(toppings)
+make_pizza('peperoni')
+make_pizza('mushrooms'.'green peppers','extra cheese')
+```
+形参名`*toppings`中的星号让python创建一个名为toppings的空元组，并将收到的所有
+值封装到这个空元组中。函数调用print()生成输出，证明python能够处理一个值来调用函数的情形，也能处理使用三个值来调用函数的情形。它以类似的方式处理不同的。注意
+python将实参封装到一个元组中，即便函数只收到一个值：
+```python
+('pepperoni',)
+('mushrooms', 'green peppers', 'extra cheese')
+```
+现在，可以将函数调用print()替换成为一个循环，遍历配料表并对顾客点的披萨进行描述：
+```python
+def make_pizza(*toppings):
+    print("\nMarking a pizza with the foll\owing toppings:")
+    for topping in toppings:
+        print(f"-{topping}")
+mark_pizza("pepperoni")
+mark_pizza('mushrooms','greem peppers','estra cheese')
+```
+不管收到是一个值还是三个值，这个函数都能妥善处理
+```python
+Making a pizza with the following toppings:
+- pepperoni
+Making a pizza with the following toppings:
+- mushrooms
+- green peppers
+- extra cheese
+```
+#### 结合使用位置实参和任意数量实参
+如果要让函数接受不同类型的实参，必须在函数定义中将接纳任意数量实参的形参
+放在最后。Python先匹配位置实参和关键字实参，再将余下的实参都收集到最后一
+个形参中。
+例如，如果前面的函数还需要一个表示比萨尺寸的形参，必须将其放在形参
+*toppings 的前面：
+```python
+def make_pizza(size,*toppings):
+    print(f"\nMakeing a {size}-inch pizza witch following toppings:")
+    for toppong in toppongs:
+        print(f"-{topping}")
+make_pizza(16,'pepperoni')
+make_pizza(12,'mushrooms','green peppers','extra cheese')
+```
+基于上述函数定义，python将收到的第一个值赋给size，并将其他所有值都存储在元组
+topping中。在函数的调用中，首先指定表示披萨尺寸的实参，再根据需要指定任意数量
+的配料。
+现在，每个披萨都有了尺寸和一系列配料，而且这些信息按正确的顺序打印出来了--首先
+时尺寸，然后时配料：
+```python
+Making a 16-inch pizza with the following toppings:
+- pepperoni
+Making a 12-inch pizza with the following toppings:
+- mushrooms
+- green peppers
+- extra cheese
+```
+注意 　你经常会看到通用形参名*args ，它也收集任意数量的位置实参。
+### 使用任意数量的关键字实参
+有时候，需要接受任意数量的实参，但预先不知道传递给函数的会是什么样的信
+息。在这种情况下，可将函数编写成能够接受任意数量的键值对——调用语句提供
+了多少就接受多少。一个这样的示例是创建用户简介：你知道将收到有关用户的信
+息，但不确定会是什么样的信息。在下面的示例中，函数build_profile() 接受
+名和姓，还接受任意数量的关键字实参：
+`user_profile.py`
+```python
+ def build_profile(first, last, **user_info):
+ """创建一个字典，其中包含我们知道的有关用户的一切。"""
+    ❶ user_info['first_name'] = first
+    user_info['last_name'] = last
+    return user_info
+ user_profile = build_profile('albert', 'einstein',location='princeton',field='physics')
+ print(user_profile)
+```
+函数build_profile() 的定义要求提供名和姓，同时允许根据需要提供任意数量
+的名称值对。形参**user_info 中的两个星号让Python创建一个名为user_info
+的空字典，并将收到的所有名称值对都放到这个字典中。在这个函数中，可以像访
+问其他字典那样访问user_info 中的名称值对。
+在build_profile() 的函数体内，将名和姓加入了字典user_info 中（见
+❶），因为总是会从用户那里收到这两项信息，而这两项信息没有放到这个字典中。
+接下来，将字典user_info 返回到函数调用行。
+我们调用build_profile() ，向它传递名（'albert' ）、姓（'einstein'
+）和两个键值对（location='princeton' 和field='physics' ），并将返
+回的user_info 赋给变量user_profile ，再打印该变量：
+```python
+{'location': 'princeton', 'field': 'physics',
+'first_name': 'albert', 'last_name': 'einstein'}
+```
+在这里，返回的字典包含用户的名和姓，还有求学的地方和所学专业。调用这个函
+数时，不管额外提供多少个键值对，它都能正确地处理。
+编写函数时，能以各种方式混合使用位置实参、关键字实参和任意数量的实参。知
+道这些实参类型大有裨益，因为阅读别人编写的代码时经常会见到它们。要正确地
+使用这些类型的实参并知道其使用时机，需要经过一定的练习。就目前而言，牢记
+使用最简单的方法来完成任务就好了。继续往下阅读，你就会知道在各种情况下哪
+种方法的效率最高。
+注意 　你经常会看到形参名**kwargs ，它用于收集任意数量的关键字实参。
+## 将函数存储到模块中
+使用函数的优点之一是可将代码块于主程序分离。通过给函数指定性描述名称，可让主程
+序容易理解的多。你还可以更近一步，将函数存储在称谓模块的独立文件中，再将模块导
+入主程序中。import语句允许再当前运行的程序文件中使用模块的代码。
+通过将函数存储在独立的文件中，可隐藏程序代码的细节，将重点放在程序的高层
+逻辑上。这还能让你在众多不同的程序中重用函数。将函数存储在独立文件中后，
+可与其他程序员共享这些文件而不是整个程序。知道如何导入函数还能让你使用其
+他程序员编写的函数库。
+导入模块的方法有多种，下面对每种进行简要的介绍。
+### 导入整个模块
+要让函数是可导入的，得先创建模块。模块 是扩展名为.py的文件，包含要导入到
+程序中的代码。下面来创建一个包含函数make_pizza() 的模块。为此，将文件
+pizza.py中除函数make_pizza() 之外的其他代码删除：
+```python
+def make_pizza(size,*toppings):
+    print(f"\nMark a {size}-inch pizza with the following  toppings:")
+    for topping in toppings:
+        print(f"-{topping}")
+```
+接下来再pizza.py所在目录中创建一个名为making_pizza.py的文件。这个文件导入刚刚创建好的模块，再调用make_pizza.py两次：
+```python
+import pizza
+pizza,make_pizza(16,'pepproni')
+pizza.make_pizza(12, 'mushrooms', 'green peppers', 'extra cheese')
+```
+Python读取这个文件时，代码行import pizza 让Python打开文件pizza.py，并将
+其中的所有函数都复制到这个程序中。你看不到复制的代码，因为在这个程序即将
+运行时，Python在幕后复制了这些代码。你只需知道，在making_pizzas.py中，可
+使用pizza.py中定义的所有函数。
+要调用被导入模块中的函数，可指定被导入模块的名称pizza 和函数名
+make_pizza() ，并用句点分隔。这些代码的输出与没有导入模块的原始
+程序相同：
+```python
+Making a 16-inch pizza with the following toppings:
+- pepperoni
+Making a 12-inch pizza with the following toppings:
+- mushrooms
+- green peppers
+- extra cheese
+```
+这就是一种导入方法：只需编写一条import 语句并在其中指定模块名，就可在程
+序中使用该模块中的所有函数。如果使用这种import 语句导入了名为
+module_name.py的整个模块，就可使用下面的语法来使用其中任何一个函数：
+```python
+module_name.function_name()
+```
